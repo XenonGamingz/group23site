@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Tome Track{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen">
+  <!-- Sidebar -->
+  <aside class="flex flex-col w-64">
+    <div class="flex flex-col items-center justify-center bg-[#7a9585] p-6 h-32">
+      <span class="material-symbols-outlined text-black text-2xl mb-1 select-none">menu_book</span>
+      <div class="font-extrabold text-black text-lg leading-none text-center select-none">
+        <div>Tome</div>
+        <div>Track</div>
+      </div>
+    </div>
+    <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 space-y-6 text-black text-lg">
+      <a href="{% url 'book_list' %}" class="block font-bold text-green-900">Books</a>
+      <a href="{% url 'borrower_list' %}" class="block">Borrowers</a>
+      <a href="{% url 'borrow_list' %}" class="block">List of Borrows</a>
+      <a href="{% url 'book_create' %}" class="block">Add Books</a>
+      <a href="{% url 'borrower_create' %}" class="block">Add Borrowers</a>
+      <a href="{% url 'category_create' %}" class="block">Add Categories</a>
+      <a href="{% url 'borrow_create' %}" class="block">Book Lending</a>
+      <form method="post" action="{% url 'logout' %}" class="mt-auto self-center">
+        {% csrf_token %}
+        <button class="bg-[#2a7a2e] text-white rounded-full py-2 px-12 w-max" type="submit">Logout</button>
+      </form>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-grow bg-[#f2e3d1] p-6">
+    <!-- Search and Filter -->
+    <form method="get" action="" class="flex justify-between mb-6 max-w-4xl mx-auto">
+      <!-- Search Bar -->
+      <div class="flex items-center bg-[#d9d9d9] rounded-full px-4 py-2 w-96">
+        <span class="material-symbols-outlined text-black text-base select-none">search</span>
+        <input
+          type="text"
+          name="q"
+          value="{{ query }}"
+          placeholder="Search Library"
+          class="bg-transparent focus:outline-none ml-2 text-black text-base w-full"
+        />
+      </div>
+
+      <!-- Catalog Dropdown -->
+      <div class="relative">
+        <select
+          name="category"
+          onchange="this.form.submit()"
+          class="bg-[#d9d9d9] rounded-full px-4 py-2 text-black text-base appearance-none pr-8"
+          aria-label="Catalog"
+        >
+          <option value="">All Categories</option>
+          {% for category in categories %}
+            <option value="{{ category.id }}" {% if category.id|stringformat:"s" == selected_category %}selected{% endif %}>
+              {{ category.name }}
+            </option>
+          {% endfor %}
+        </select>
+        <span
+          class="material-symbols-outlined pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-black text-sm select-none"
+        >
+          arrow_drop_down
+        </span>
+      </div>
+    </form>
+
+    <!-- Book List -->
+    <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {% for book in books %}
+        <div class="bg-white p-4 rounded shadow">
+          <h2 class="text-lg font-semibold text-green-900">{{ book.title }}</h2>
+          <p class="text-gray-700">Author: {{ book.author }}</p>
+          <p class="text-gray-700">ISBN: {{ book.isbn }}</p>
+          <p class="text-gray-700">Category: {{ book.category.name }}</p>
+          <p class="text-gray-700">Available: {{ book.available }}</p>
+        </div>
+      {% empty %}
+        <p class="text-gray-700 col-span-2">No books available.</p>
+      {% endfor %}
+    </div>
+  </main>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Add/Edit Book{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen">
+  <!-- Sidebar -->
+  <aside class="flex flex-col w-64">
+    <div class="flex flex-col items-center justify-center bg-[#7a9585] p-6 h-32">
+      <span class="material-symbols-outlined text-black text-2xl mb-1 select-none">menu_book</span>
+      <div class="font-extrabold text-black text-lg leading-none text-center select-none">
+        <div>Tome</div>
+        <div>Track</div>
+      </div>
+    </div>
+    <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 space-y-6 text-black text-lg">
+      <a href="{% url 'book_list' %}" class="block">Books</a>
+      <a href="{% url 'borrower_list' %}" class="block">Borrowers</a>
+      <a href="{% url 'borrow_list' %}" class="block">List of Borrows</a>
+      <a href="{% url 'book_create' %}" class="block font-bold text-green-900">Add Books</a>
+      <a href="{% url 'borrower_create' %}" class="block">Add Borrowers</a>
+      <a href="{% url 'category_create' %}" class="block">Add Categories</a>
+      <a href="{% url 'borrow_create' %}" class="block">Book Lending</a>
+      <form method="post" action="{% url 'logout' %}" class="mt-auto self-center">
+        {% csrf_token %}
+        <button class="bg-[#2a7a2e] text-white rounded-full py-2 px-12 w-max" type="submit">Logout</button>
+      </form>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-grow bg-[#f2e3d1] p-6 flex flex-col justify-center">
+    <div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <h1 class="text-2xl font-semibold mb-6 text-center text-green-900">Add / Edit Book</h1>
+
+      {% if form.errors %}
+        <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded text-center">
+          Please correct the errors below.
+        </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-4">
+            <label class="block mb-1 font-semibold text-green-900" for="{{ field.id_for_label }}">
+              {{ field.label }}
+            </label>
+            {{ field|add_class:"w-full rounded border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" }}
+            {% if field.help_text %}
+              <p class="text-sm text-gray-500 mt-1">{{ field.help_text }}</p>
+            {% endif %}
+            {% for error in field.errors %}
+              <p class="text-sm text-red-600 mt-1">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endfor %}
+        <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-semibold py-3 rounded transition">
+          Save Book
+        </button>
+      </form>
+    </div>
+  </main>
+</div>
+{% endblock %}

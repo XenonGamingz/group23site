@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}{% endblock %}</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Material Symbols (for icons) -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(-10px); }
+      10% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+    .animate-fade-in-out {
+      animation: fadeInOut 4s ease-in-out forwards;
+    }
+  </style>
+</head>
+<body class="relative">
+
+  <!-- Toast Messages -->
+  {% if messages %}
+    <div class="fixed top-4 right-4 z-50">
+      {% for message in messages %}
+        <div class="bg-green-600 text-white px-4 py-3 rounded shadow-lg mb-2 animate-fade-in-out">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</body>
+</html>
