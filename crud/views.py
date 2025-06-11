@@ -25,7 +25,7 @@ def register_librarian(request):
 
 # Home / Dashboard
 
-# @login_required
+@login_required
 def home(request):
     query = request.GET.get('q', '')
     selected_category = request.GET.get('category', '')
@@ -54,12 +54,12 @@ def home(request):
 
 # CATEGORY VIEWS
 
-# @login_required
+@login_required
 def category_list(request):
     categories = Category.objects.all().order_by('name')
     return render(request, 'crud/category_list.html', {'categories': categories})
 
-# @login_required
+@login_required
 def category_edit(request, pk):
     category = get_object_or_404(Category, pk=pk)
     if request.method == 'POST':
@@ -71,7 +71,7 @@ def category_edit(request, pk):
         form = CategoryForm(instance=category)
     return render(request, 'crud/category_form.html', {'form': form})
 
-# @login_required
+@login_required
 def category_delete_confirm(request, pk):
     category = get_object_or_404(Category, pk=pk)
     if request.method == 'POST':
@@ -79,7 +79,7 @@ def category_delete_confirm(request, pk):
         return redirect('category_list')
     return render(request, 'crud/category_confirm_delete.html', {'category': category})
 
-# @login_required
+@login_required
 def category_create(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -93,12 +93,12 @@ def category_create(request):
 
 
 # BOOK VIEWS
-# @login_required
+@login_required
 def book_list(request):
     books = Book.objects.all()
     return render(request, 'crud/book_list.html', {'books': books})
 
-# @login_required
+@login_required
 def book_create(request):
     if request.method == 'POST':
         form = BookForm(request.POST)
@@ -110,7 +110,7 @@ def book_create(request):
         form = BookForm()
     return render(request, 'crud/book_form.html', {'form': form})
 
-# @login_required
+@login_required
 def book_edit(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
@@ -123,14 +123,14 @@ def book_edit(request, book_id):
         form = BookForm(instance=book)
     return render(request, 'crud/book_form.html', {'form': form, 'edit': True})
 
-# @login_required
+@login_required
 def book_delete(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     book.delete()
     messages.success(request, 'Book deleted successfully!')
     return redirect('book_list')
 
-# @login_required
+@login_required
 
 def book_delete_confirm(request, book_id):
     book = get_object_or_404(Book, id=book_id)
@@ -142,12 +142,12 @@ def book_delete_confirm(request, book_id):
 
 # BORROWER VIEWS
 
-# @login_required
+@login_required
 def borrower_list(request):
     borrowers = Borrower.objects.all()
     return render(request, 'crud/borrower_list.html', {'borrowers': borrowers})
 
-# @login_required
+@login_required
 def borrower_create(request):
     if request.method == 'POST':
         form = BorrowerForm(request.POST)
@@ -161,13 +161,13 @@ def borrower_create(request):
 
 
 # BORROW RECORD VIEWS
-# @login_required
+@login_required
 def borrow_list(request):
     borrow_records = BorrowRecord.objects.select_related('borrower', 'book').all()
     return render(request, 'crud/borrow_list.html', {'borrow_records': borrow_records})
 
 
-# @login_required
+@login_required
 def borrow_create(request):
     if request.method == 'POST':
         form = BorrowRecordForm(request.POST)
@@ -186,7 +186,7 @@ def borrow_create(request):
         form = BorrowRecordForm()
     return render(request, 'crud/borrow_form.html', {'form': form})
 
-# @login_required
+@login_required
 def return_book(request, record_id):
     record = get_object_or_404(BorrowRecord, id=record_id)
     if not record.is_returned:
@@ -201,7 +201,7 @@ def return_book(request, record_id):
 
 # Pagination Controls
 
-# @login_required
+@login_required
 def category_list(request):
     categories = Category.objects.all()
     paginator = Paginator(categories, 6)  # 6 items per page

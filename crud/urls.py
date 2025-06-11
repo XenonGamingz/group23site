@@ -9,7 +9,7 @@ urlpatterns = [
     path('register', register_librarian, name='register'),
 
     # Login
-    path('login/', auth_views.LoginView.as_view(template_name='crud/login.html'), name='login'),
+    path('', auth_views.LoginView.as_view(template_name='crud/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
 
     # Home Page
