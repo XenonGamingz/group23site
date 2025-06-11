@@ -71,7 +71,7 @@ class LibrarianRegistrationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs.update({
             "class": "w-full rounded-lg bg-green-400 text-green-900 placeholder-green-900 px-5 py-3 text-lg focus:outline-none",
-            "placeholder": "Create a password"
+            "placeholder": "Create a password (9 characters or longer)"
         })
         self.fields['password2'].widget.attrs.update({
             "class": "w-full rounded-lg bg-green-400 text-green-900 placeholder-green-900 px-5 py-3 text-lg focus:outline-none",

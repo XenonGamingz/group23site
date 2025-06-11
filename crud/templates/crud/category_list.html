@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Borrow Records | Tome Track{% endblock %}
+{% block title %}Categories | Tome Track{% endblock %}
 
 {% block content %}
 <div class="flex min-h-screen">
   <!-- Sidebar -->
   <aside class="flex flex-col w-64">
-    <!-- identical sidebar -->
     <div class="flex flex-col items-center justify-center bg-[#7a9585] p-6 h-32">
       <span class="material-symbols-outlined text-black text-2xl mb-1 select-none">menu_book</span>
       <div class="font-extrabold text-black text-lg leading-none text-center select-none">
@@ -17,9 +16,9 @@
     </div>
     <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 space-y-6 text-black text-lg">
       <a href="{% url 'book_list' %}" class="block">Books</a>
-      <a href="{% url 'category_list' %}" class="block">Categories</a>
+      <a href="{% url 'category_list' %}" class="block font-bold text-green-900">Categories</a>
       <a href="{% url 'borrower_list' %}" class="block">Borrowers</a>
-      <a href="{% url 'borrow_list' %}" class="block font-bold text-green-900">List of Borrows</a>
+      <a href="{% url 'borrow_list' %}" class="block">List of Borrows</a>
       <a href="{% url 'book_create' %}" class="block">Add Books</a>
       <a href="{% url 'borrower_create' %}" class="block">Add Borrowers</a>
       <a href="{% url 'category_create' %}" class="block">Add Categories</a>
@@ -33,24 +32,19 @@
 
   <!-- Content -->
   <main class="flex-grow bg-[#f2e3d1] p-6">
-    <h1 class="text-2xl font-bold text-green-900 text-center mb-6">Borrow Records</h1>
+    <h1 class="text-2xl font-bold text-green-900 text-center mb-6">Categories</h1>
 
     <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
-      {% for record in page_obj %}
+      {% for category in page_obj %}
         <div class="bg-white p-6 rounded-lg shadow-lg space-y-2">
-          <h2 class="text-lg font-semibold text-green-900">{{ record.book.title }}</h2>
-          <p class="text-gray-700">Borrower: {{ record.borrower.name }}</p>
-          <p class="text-gray-700">Borrowed: {{ record.borrow_date|date:"M d, Y" }}</p>
-          <p class="text-gray-700">Returned: {% if record.is_returned %}<span class="text-green-600 font-semibold">Yes</span>{% else %}<span class="text-red-600 font-semibold">No</span>{% endif %}</p>
-          {% if not record.is_returned %}
-            <form method="post" action="{% url 'return_book' record.id %}">
-              {% csrf_token %}
-              <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium">Mark as Returned</button>
-            </form>
-          {% endif %}
+          <h2 class="text-lg font-semibold text-green-900">{{ category.name }}</h2>
+          <div class="flex space-x-3 mt-4">
+            <a href="{% url 'category_edit' category.id %}" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium">Edit</a>
+            <a href="{% url 'category_delete' category.id %}" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm font-medium">Delete</a>
+          </div>
         </div>
       {% empty %}
-        <p class="text-gray-700 col-span-2 text-center">No borrow records found.</p>
+        <p class="text-gray-700 col-span-2 text-center">No categories available.</p>
       {% endfor %}
     </div>
 

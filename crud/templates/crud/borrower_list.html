@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Borrowers List{% endblock %}
+{% block title %}Borrowers | Tome Track{% endblock %}
 
 {% block content %}
 <div class="flex min-h-screen">
   <!-- Sidebar -->
   <aside class="flex flex-col w-64">
+    <!-- identical sidebar as above -->
     <div class="flex flex-col items-center justify-center bg-[#7a9585] p-6 h-32">
       <span class="material-symbols-outlined text-black text-2xl mb-1 select-none">menu_book</span>
       <div class="font-extrabold text-black text-lg leading-none text-center select-none">
@@ -16,6 +17,7 @@
     </div>
     <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 space-y-6 text-black text-lg">
       <a href="{% url 'book_list' %}" class="block">Books</a>
+      <a href="{% url 'category_list' %}" class="block">Categories</a>
       <a href="{% url 'borrower_list' %}" class="block font-bold text-green-900">Borrowers</a>
       <a href="{% url 'borrow_list' %}" class="block">List of Borrows</a>
       <a href="{% url 'book_create' %}" class="block">Add Books</a>
@@ -29,21 +31,33 @@
     </nav>
   </aside>
 
-  <!-- Main Content -->
+  <!-- Content -->
   <main class="flex-grow bg-[#f2e3d1] p-6">
-    <h1 class="text-2xl font-bold text-green-900 text-center mb-6">Borrowers List</h1>
+    <h1 class="text-2xl font-bold text-green-900 text-center mb-6">Borrowers</h1>
 
     <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
-      {% for borrower in borrowers %}
-        <div class="bg-white p-4 rounded shadow">
+      {% for borrower in page_obj %}
+        <div class="bg-white p-6 rounded-lg shadow-lg space-y-2">
           <h2 class="text-lg font-semibold text-green-900">{{ borrower.name }}</h2>
-          <p class="text-gray-700">Student ID: {{ borrower.student_id }}</p>
+          <p class="text-gray-700">ID: {{ borrower.student_id }}</p>
           <p class="text-gray-700">Contact: {{ borrower.contact_number }}</p>
         </div>
       {% empty %}
-        <p class="text-gray-700 col-span-2">No borrowers found.</p>
+        <p class="text-gray-700 col-span-2 text-center">No borrowers found.</p>
       {% endfor %}
     </div>
+
+    <!-- Pagination Controls (same as above) -->
+    <div class="mt-6 flex justify-center space-x-2">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">‹ Prev</a>
+      {% endif %}
+      <span class="px-3 py-1">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">Next ›</a>
+      {% endif %}
+    </div>
+
   </main>
 </div>
 {% endblock %}

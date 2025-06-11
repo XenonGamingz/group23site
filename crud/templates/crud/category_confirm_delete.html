@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Delete Category | Tome Track{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-[#f2e3d1] px-4">
+  <div class="bg-white p-10 rounded-lg shadow-lg text-center max-w-md w-full">
+    <h1 class="text-xl font-bold text-red-700 mb-4">Confirm Deletion</h1>
+    <p class="mb-6 text-gray-800">Are you sure you want to delete the category:</p>
+    <p class="font-semibold text-lg text-green-900 mb-6">{{ category.name }}</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="flex justify-center space-x-4">
+        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Yes, Delete</button>
+        <a href="{% url 'category_list' %}" class="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

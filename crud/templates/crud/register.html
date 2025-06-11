@@ -4,35 +4,26 @@
 {% block title %}Register | TomeTrack{% endblock %}
 
 {% block content %}
-<div class="relative min-h-screen flex flex-col items-center justify-center text-white">
+<div class="relative min-h-screen overflow-hidden flex flex-col items-center justify-center text-white pt-16">
   <img
     src="https://storage.googleapis.com/a1aa/image/5763fbf1-36fa-4c6a-e53e-9db1881cc5c3.jpg"
     class="absolute inset-0 w-full h-full object-cover brightness-50"
     alt="Library background"
   />
 
+  <!-- Header with logo -->
   <header
-    class="fixed top-0 left-0 w-full bg-opacity-60 bg-black backdrop-blur-md shadow-md flex justify-between items-center px-6 sm:px-10 md:px-16 lg:px-24 z-50 py-4"
+    class="fixed top-0 left-0 w-full bg-opacity-60 bg-black backdrop-blur-md shadow-md flex justify-center items-center px-6 py-4 z-50"
   >
-    <div class="flex items-center space-x-3">
-      <img
-        src="https://storage.googleapis.com/a1aa/image/32fe1101-2fdc-4e8d-4b07-180904906dcc.jpg"
-        class="w-12 h-12 rounded-full object-cover"
-        alt="Logo"
-      />
-      <span class="text-green-400 text-lg sm:text-xl font-medium select-none">
+    <div class="flex items-center space-x-4">
+      <span class="material-symbols-outlined text-white text-4xl select-none">menu_book</span>
+      <div class="text-white text-3xl font-extrabold leading-tight tracking-wide select-none">
         TomeTrack
-      </span>
+      </div>
     </div>
-    <a
-      href="{% url 'login' %}"
-      class="bg-green-700 hover:bg-green-800 transition-colors rounded-full px-5 py-2 text-white text-sm sm:text-base font-medium select-none"
-    >
-      Login
-    </a>
   </header>
 
-  <main class="z-10 w-full max-w-xl px-6 sm:px-10 md:px-16 lg:px-24 mt-8 pt-2 bg-white bg-opacity-90 rounded-2xl shadow-lg p-8">
+  <main class="z-10 w-full max-w-xl px-6 sm:px-10 md:px-16 lg:px-24 mt-8 pt-2 bg-white bg-opacity-90 rounded-2xl shadow-lg p-8 overflow-hidden">
     <h1 class="text-4xl sm:text-5xl font-normal mb-2 text-center pt-12 text-green-900">
       Sign up for TomeTrack
     </h1>
@@ -41,19 +32,28 @@
     </p>
 
     {% if form.errors %}
-      <div id="error-message" class="max-w-md mx-auto my-6 p-4 bg-red-100 border border-red-400 rounded text-red-700 text-center">
-        Please fill-out all the fields.
+      <div id="error-message" class="w-full mb-6 p-3 bg-red-100 border border-red-400 rounded text-red-700 text-sm text-center shadow-sm">
+        <strong class="font-semibold">Error:</strong>
+        {% if form.username.errors %}
+          {{ form.username.errors.0 }}
+        {% elif form.first_name.errors %}
+          {{ form.first_name.errors.0 }}
+        {% elif form.last_name.errors %}
+          {{ form.last_name.errors.0 }}
+        {% elif form.email.errors %}
+          {{ form.email.errors.0 }}
+        {% elif form.password1.errors %}
+          {{ form.password1.errors.0 }}
+        {% elif form.password2.errors %}
+          {{ form.password2.errors.0 }}
+        {% else %}
+          Please correct the highlighted fields.
+        {% endif %}
       </div>
     {% endif %}
 
-    <form
-      method="post"
-      action="{% url 'register' %}"
-      class="space-y-4 max-w-xl mx-auto"
-      novalidate
-    >
+    <form method="post" action="{% url 'register' %}" class="space-y-4 max-w-xl mx-auto" novalidate>
       {% csrf_token %}
-
       {{ form.username|add_class:"w-full rounded-lg bg-green-400 text-green-900 placeholder-green-900 px-5 py-3 text-lg focus:outline-none" }}
       {{ form.first_name|add_class:"w-full rounded-lg bg-green-400 text-green-900 placeholder-green-900 px-5 py-3 text-lg focus:outline-none" }}
       {{ form.last_name|add_class:"w-full rounded-lg bg-green-400 text-green-900 placeholder-green-900 px-5 py-3 text-lg focus:outline-none" }}
@@ -68,20 +68,31 @@
         Register
       </button>
     </form>
+    <!-- Login Redirect -->
+      <p class="text-center mt-4 text-green-900 text-sm sm:text-base">
+        Already have an account?
+        <a href="{% url 'login' %}" class="text-green-800 underline hover:text-green-900 font-semibold">Log In!</a>
+      </p>
   </main>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const errorMessage = document.getElementById('error-message');
+
+    {% if form.errors %}
+      errorMessage.classList.remove('opacity-0');
+    {% endif %}
+
     if (!errorMessage) return;
 
     const formFields = document.querySelectorAll('form input');
     formFields.forEach(field => {
       field.addEventListener('input', () => {
-        errorMessage.style.display = 'none';
+        errorMessage.classList.add('opacity-0');
       });
     });
   });
 </script>
+
 {% endblock %}

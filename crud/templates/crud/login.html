@@ -4,42 +4,34 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="relative min-h-screen flex flex-col items-center justify-center text-white">
+<div class="relative min-h-screen flex flex-col items-center justify-center text-white pt-16">
   <img
     src="https://storage.googleapis.com/a1aa/image/5763fbf1-36fa-4c6a-e53e-9db1881cc5c3.jpg"
     class="absolute inset-0 w-full h-full object-cover brightness-50"
     alt="Library background"
   />
 
+  <!-- Header with updated logo -->
   <header
-    class="fixed top-0 left-0 w-full bg-opacity-60 bg-black backdrop-blur-md shadow-md flex justify-between items-center px-6 sm:px-10 md:px-16 lg:px-24 z-50 py-4"
+    class="fixed top-0 left-0 w-full bg-opacity-60 bg-black backdrop-blur-md shadow-md flex justify-center items-center px-6 py-4 z-50"
   >
-    <div class="flex items-center space-x-3">
-      <img
-        src="https://storage.googleapis.com/a1aa/image/32fe1101-2fdc-4e8d-4b07-180904906dcc.jpg"
-        class="w-12 h-12 rounded-full object-cover"
-        alt="Logo"
-      />
-      <span class="text-green-400 text-lg sm:text-xl font-medium select-none">
+    <div class="flex items-center space-x-4">
+      <span class="material-symbols-outlined text-white text-4xl select-none">menu_book</span>
+      <div class="text-white text-3xl font-extrabold leading-tight tracking-wide select-none">
         TomeTrack
-      </span>
+      </div>
     </div>
-    <a
-      href="{% url 'register' %}"
-      class="bg-green-700 hover:bg-green-800 transition-colors rounded-full px-5 py-2 text-white text-sm sm:text-base font-medium select-none"
-    >
-      Register
-    </a>
   </header>
 
-  <main class="z-10 w-full max-w-md px-6 mt-24 pt-10 bg-white bg-opacity-90 rounded-2xl shadow-lg p-8 text-green-900">
-    <h1 class="text-3xl font-bold text-center mb-6">Log in to TomeTrack</h1>
-    <p class="text-center text-lg sm:text-xl mb-8 leading-snug text-green-900">
+  <!-- Centered Login Form -->
+  <main class="z-10 w-full max-w-md px-6 pt-6 pb-10 bg-white bg-opacity-90 rounded-2xl shadow-xl text-green-900">
+    <h1 class="text-3xl font-bold text-center mb-4">Log in to TomeTrack</h1>
+    <p class="text-center text-lg sm:text-xl mb-8 leading-snug">
       Your library catalog available<br />anywhere, anytime.
     </p>
 
     {% if form.errors %}
-      <div id="error-message" class="max-w-md mx-auto my-6 p-4 bg-red-100 border border-red-400 rounded text-red-700 text-center">
+      <div id="error-message" class="mb-6 p-4 bg-red-100 border border-red-400 rounded text-red-700 text-center">
         Please fill-out all the fields.
       </div>
     {% endif %}
@@ -54,13 +46,19 @@
       </div>
       <div class="flex justify-center">
         <button
-            type="submit"
-            class="w-full bg-green-700 hover:bg-green-800 transition-colors rounded-full py-3 text-white text-lg font-medium mt-6 select-none"
+          type="submit"
+          class="w-full bg-green-700 hover:bg-green-800 transition-colors rounded-full py-3 text-white text-lg font-medium mt-4 select-none"
         >
-            Log In
+          Log In
         </button>
       </div>
     </form>
+
+    <!-- Register Link -->
+    <p class="text-center text-green-900 mt-6 text-sm">
+      Need to register?
+      <a href="{% url 'register' %}" class="text-green-700 hover:underline font-medium">Register now!</a>
+    </p>
   </main>
 </div>
 
@@ -78,4 +76,3 @@
   });
 </script>
 {% endblock %}
-

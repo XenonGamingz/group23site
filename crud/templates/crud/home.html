@@ -16,6 +16,7 @@
     </div>
     <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 space-y-6 text-black text-lg">
       <a href="{% url 'book_list' %}" class="block font-bold text-green-900">Books</a>
+      <a href="{% url 'category_list' %}" class="block">Categories</a>
       <a href="{% url 'borrower_list' %}" class="block">Borrowers</a>
       <a href="{% url 'borrow_list' %}" class="block">List of Borrows</a>
       <a href="{% url 'book_create' %}" class="block">Add Books</a>
@@ -70,17 +71,32 @@
 
     <!-- Book List -->
     <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
-      {% for book in books %}
-        <div class="bg-white p-4 rounded shadow">
+      {% for book in page_obj %}
+        <div class="bg-white p-6 rounded-lg shadow-lg space-y-2">
           <h2 class="text-lg font-semibold text-green-900">{{ book.title }}</h2>
           <p class="text-gray-700">Author: {{ book.author }}</p>
           <p class="text-gray-700">ISBN: {{ book.isbn }}</p>
           <p class="text-gray-700">Category: {{ book.category.name }}</p>
           <p class="text-gray-700">Available: {{ book.available }}</p>
+          <div class="flex space-x-3 mt-4">
+            <a href="{% url 'book_edit' book.id %}" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium">Edit</a>
+            <a href="{% url 'book_delete' book.id %}" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm font-medium">Delete</a>
+          </div>
         </div>
       {% empty %}
-        <p class="text-gray-700 col-span-2">No books available.</p>
+        <p class="text-gray-700 col-span-2 text-center">No books available.</p>
       {% endfor %}
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="mt-6 flex justify-center space-x-2">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">‹ Prev</a>
+      {% endif %}
+      <span class="px-3 py-1">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">Next ›</a>
+      {% endif %}
     </div>
   </main>
 </div>
