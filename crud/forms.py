@@ -24,11 +24,11 @@ class BorrowerForm(forms.ModelForm):
 class BorrowRecordForm(forms.ModelForm):
     class Meta:
         model = BorrowRecord
-        fields = ['borrower', 'book', 'borrow_date', 'return_date', 'is_returned']
+        fields = ['book', 'borrower', 'return_date']  # Don't include borrow_date
         widgets = {
-            'borrow_date': forms.DateInput(attrs={'type': 'date'}),
             'return_date': forms.DateInput(attrs={'type': 'date'}),
         }
+
 
 class LibrarianRegistrationForm(UserCreationForm):
     username = forms.CharField(

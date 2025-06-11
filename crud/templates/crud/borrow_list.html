@@ -37,21 +37,52 @@
 
     <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
       {% for record in page_obj %}
-        <div class="bg-white p-6 rounded-lg shadow-lg space-y-2">
-          <h2 class="text-lg font-semibold text-green-900">{{ record.book.title }}</h2>
-          <p class="text-gray-700">Borrower: {{ record.borrower.name }}</p>
-          <p class="text-gray-700">Borrowed: {{ record.borrow_date|date:"M d, Y" }}</p>
-          <p class="text-gray-700">Returned: {% if record.is_returned %}<span class="text-green-600 font-semibold">Yes</span>{% else %}<span class="text-red-600 font-semibold">No</span>{% endif %}</p>
-          {% if not record.is_returned %}
-            <form method="post" action="{% url 'return_book' record.id %}">
-              {% csrf_token %}
-              <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium">Mark as Returned</button>
-            </form>
+      <div class="bg-white p-6 rounded-lg shadow-lg space-y-2">
+        <h2 class="text-lg font-semibold text-green-900">{{ record.book.title }}</h2>
+        <p class="text-gray-700">Borrower: {{ record.borrower.name }}</p>
+        <p class="text-gray-700">Borrowed: {{ record.borrow_date|date:"M d, Y" }}</p>
+        <p class="text-gray-700">
+          Due: 
+          {% if record.return_date %}
+            {{ record.return_date|date:"M d, Y" }}
+          {% else %}
+            <span class="text-red-600 italic">Not specified</span>
           {% endif %}
-        </div>
-      {% empty %}
-        <p class="text-gray-700 col-span-2 text-center">No borrow records found.</p>
-      {% endfor %}
+        </p>
+        
+        <p class="text-gray-700">
+          Returned:
+          {% if record.is_returned %}
+            <span class="text-green-600 font-semibold">Yes</span>
+            {% if record.actual_return_date %}
+              on {{ record.actual_return_date|date:"M d, Y" }}
+            {% endif %}
+          {% else %}
+            <span class="text-red-600 font-semibold">No</span>
+          {% endif %}
+        </p>
+      
+        <p class="text-gray-700">
+          Fine:
+          {% with record.current_fine as fine %}
+            {% if fine > 0 %}
+              <span class="text-red-600 font-semibold">₱{{ fine }}</span>
+            {% else %}
+              <span class="text-green-600 font-semibold">₱0.00</span>
+            {% endif %}
+          {% endwith %}
+        </p>
+      
+        {% if not record.is_returned %}
+          <form method="post" action="{% url 'return_book' record.id %}">
+            {% csrf_token %}
+            <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium">Mark as Returned</button>
+          </form>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p class="text-gray-700 col-span-2 text-center">No borrow records found.</p>
+    {% endfor %}
     </div>
 
     <!-- Pagination Controls -->

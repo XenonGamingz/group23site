@@ -191,12 +191,15 @@ def return_book(request, record_id):
     record = get_object_or_404(BorrowRecord, id=record_id)
     if not record.is_returned:
         record.is_returned = True
-        record.return_date = timezone.now()
+        record.actual_return_date = timezone.now().date()
+        record.fine = record.calculate_fine()
         record.save()
+
         # Update book availability
         book = record.book
         book.available += 1
         book.save()
+
     return redirect('borrow_list')
 
 # Pagination Controls

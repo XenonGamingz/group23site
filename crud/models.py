@@ -36,14 +36,30 @@ class Borrower(models.Model):
 
 # BorrowRecord model to track borrowing activities
 class BorrowRecord(models.Model):
-    borrower = models.ForeignKey(Borrower, on_delete=models.CASCADE)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    borrow_date = models.DateField(default=timezone.now)
-    return_date = models.DateField(null=True, blank=True)
+    borrower = models.ForeignKey('Borrower', on_delete=models.CASCADE)
+    book = models.ForeignKey('Book', on_delete=models.CASCADE)
+    borrow_date = models.DateField(auto_now_add=True)
+    return_date = models.DateField(null=True, blank=True)  # due date
+    actual_return_date = models.DateField(null=True, blank=True)
     is_returned = models.BooleanField(default=False)
+    fine = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
+
+    def calculate_fine(self):
+        if self.is_returned:
+            effective_date = self.actual_return_date
+        else:
+            effective_date = timezone.now().date()
+
+        if self.return_date and effective_date > self.return_date:
+            days_late = (effective_date - self.return_date).days
+            return days_late * 5  # ₱5 per day
+        return 0
+    
 
     def __str__(self):
         return f"{self.borrower.name} - {self.book.title}"
+    def current_fine(self):
+        return self.calculate_fine()
     
 
 # Add Librarian
