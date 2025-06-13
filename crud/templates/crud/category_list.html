@@ -3,8 +3,18 @@
 
 {% block title %}Categories | Tome Track{% endblock %}
 
+{% block extra_head %}
+<link href="{% static 'css/output.css' %}" rel="stylesheet">
+<style>
+  .bg-gif {
+    background: url("{% static 'images/background.gif' %}") no-repeat center center fixed;
+    background-size: cover;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="flex min-h-screen">
+<div class="flex min-h-screen bg-gif">
   <!-- Sidebar -->
   <aside class="flex flex-col w-64">
     <div class="flex flex-col items-center justify-center bg-[#7a9585] p-6 h-32">
@@ -14,51 +24,59 @@
         <div>Track</div>
       </div>
     </div>
-    <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 space-y-6 text-black text-lg">
-      <a href="{% url 'book_list' %}" class="block">Books</a>
-      <a href="{% url 'category_list' %}" class="block font-bold text-green-900">Categories</a>
-      <a href="{% url 'borrower_list' %}" class="block">Borrowers</a>
-      <a href="{% url 'borrow_list' %}" class="block">List of Borrows</a>
-      <a href="{% url 'book_create' %}" class="block">Add Books</a>
-      <a href="{% url 'borrower_create' %}" class="block">Add Borrowers</a>
-      <a href="{% url 'category_create' %}" class="block">Add Categories</a>
-      <a href="{% url 'borrow_create' %}" class="block">Book Lending</a>
-      <form method="post" action="{% url 'logout' %}" class="mt-auto self-center">
-        {% csrf_token %}
-        <button class="bg-[#2a7a2e] text-white rounded-full py-2 px-12 w-max" type="submit">Logout</button>
-      </form>
-    </nav>
+      <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 text-black text-lg justify-between">
+        <div class="space-y-4">
+          <a href="{% url 'book_list' %}" class="block">Books</a>
+          <a href="{% url 'category_list' %}" class="block font-bold text-green-900">Categories</a>
+          <a href="{% url 'borrower_list' %}" class="block">Borrowers</a>
+          <a href="{% url 'borrow_list' %}" class="block">List of Borrows</a>
+          <a href="{% url 'book_create' %}" class="block">Add Books</a>
+          <a href="{% url 'borrower_create' %}" class="block">Add Borrowers</a>
+          <a href="{% url 'category_create' %}" class="block">Add Categories</a>
+          <a href="{% url 'borrow_create' %}" class="block">Book Lending</a>
+        </div>
+        <form method="post" action="{% url 'logout' %}" class="pt-6 self-center">
+          {% csrf_token %}
+          <button class="bg-[#2a7a2e] text-white rounded-full py-2 px-12 w-max" type="submit">Logout</button>
+        </form>
+      </nav>
   </aside>
 
   <!-- Content -->
-  <main class="flex-grow bg-[#f2e3d1] p-6">
-    <h1 class="text-2xl font-bold text-green-900 text-center mb-6">Categories</h1>
-
-    <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
-      {% for category in page_obj %}
-        <div class="bg-white p-6 rounded-lg shadow-lg space-y-2">
-          <h2 class="text-lg font-semibold text-green-900">{{ category.name }}</h2>
-          <div class="flex space-x-3 mt-4">
-            <a href="{% url 'category_edit' category.id %}" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium">Edit</a>
-            <a href="{% url 'category_delete' category.id %}" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm font-medium">Delete</a>
-          </div>
+    <main class="flex-grow relative p-6">
+      <!-- Semi-transparent background -->
+      <div class="absolute inset-0 bg-[#f2e3d1] opacity-50 z-0"></div>
+    
+      <!-- Content on top -->
+      <div class="relative z-10">
+        <h1 class="text-2xl font-bold text-green-900 text-center mb-6">Categories</h1>
+      
+        <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {% for category in page_obj %}
+            <div class="bg-white p-6 rounded-lg shadow-lg space-y-2">
+              <h2 class="text-lg font-semibold text-green-900">{{ category.name }}</h2>
+              <div class="flex space-x-3 mt-4">
+                <a href="{% url 'category_edit' category.id %}" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium">Edit</a>
+                <a href="{% url 'category_delete' category.id %}" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm font-medium">Delete</a>
+              </div>
+            </div>
+          {% empty %}
+            <p class="text-gray-700 col-span-2 text-center">No categories available.</p>
+          {% endfor %}
         </div>
-      {% empty %}
-        <p class="text-gray-700 col-span-2 text-center">No categories available.</p>
-      {% endfor %}
-    </div>
+      
+        <!-- Pagination Controls -->
+        <div class="mt-6 flex justify-center space-x-2">
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">‹ Prev</a>
+          {% endif %}
+          <span class="px-3 py-1">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">Next ›</a>
+          {% endif %}
+        </div>
+      </div>
+    </main>
 
-    <!-- Pagination Controls -->
-    <div class="mt-6 flex justify-center space-x-2">
-      {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">‹ Prev</a>
-      {% endif %}
-      <span class="px-3 py-1">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-      {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">Next ›</a>
-      {% endif %}
-    </div>
-
-  </main>
 </div>
 {% endblock %}

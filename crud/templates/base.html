@@ -6,11 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% block title %}{% endblock %}</title>
 
+  {% block extra_head %}{% endblock %}
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Google Material Symbols (for icons) -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+
   <style>
     .material-symbols-outlined {
       font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
@@ -22,12 +26,13 @@
       90% { opacity: 1; transform: translateY(0); }
       100% { opacity: 0; transform: translateY(-10px); }
     }
+
     .animate-fade-in-out {
       animation: fadeInOut 4s ease-in-out forwards;
     }
   </style>
 </head>
-<body class="relative">
+<body class="relative" style="background: none;">
 
   <!-- Toast Messages -->
   {% if messages %}

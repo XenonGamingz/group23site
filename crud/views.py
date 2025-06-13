@@ -148,6 +148,15 @@ def borrower_list(request):
     return render(request, 'crud/borrower_list.html', {'borrowers': borrowers})
 
 @login_required
+def borrower_delete_confirm(request, pk):
+    borrower = get_object_or_404(Borrower, pk=pk)
+    if request.method == "POST":
+        borrower.delete()
+        return redirect('borrower_list')
+    return render(request, 'crud/borrower_confirm_delete.html', {'borrower': borrower})
+
+
+@login_required
 def borrower_create(request):
     if request.method == 'POST':
         form = BorrowerForm(request.POST)
@@ -212,6 +221,7 @@ def category_list(request):
     page_obj = paginator.get_page(page)
     return render(request, 'crud/category_list.html', {'page_obj': page_obj})
 
+@login_required
 def borrower_list(request):
     borrowers = Borrower.objects.all()
     paginator = Paginator(borrowers, 6)
@@ -219,6 +229,7 @@ def borrower_list(request):
     page_obj = paginator.get_page(page)
     return render(request, 'crud/borrower_list.html', {'page_obj': page_obj})
 
+@login_required
 def borrow_list(request):
     borrows = BorrowRecord.objects.select_related('book', 'borrower').all()
     paginator = Paginator(borrows, 6)

@@ -1,1 +1,9 @@
 @import 'tailwindcss';
+
+.bg-gif {
+  background-image: url('/static/images/background.gif');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+

@@ -30,6 +30,8 @@ urlpatterns = [
     # Borrowers
     path('borrowers/', views.borrower_list, name='borrower_list'),
     path('borrowers/add/', views.borrower_create, name='borrower_create'),
+    path('borrowers/<int:pk>/delete/', views.borrower_delete_confirm, name='borrower_delete'),
+
 
     # Borrowing
     path('borrow/', views.borrow_list, name='borrow_list'),

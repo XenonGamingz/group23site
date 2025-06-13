@@ -3,11 +3,20 @@
 
 {% block title %}Borrow Records | Tome Track{% endblock %}
 
+{% block extra_head %}
+<link href="{% static 'css/output.css' %}" rel="stylesheet">
+<style>
+  .bg-gif {
+    background: url("{% static 'images/background.gif' %}") no-repeat center center fixed;
+    background-size: cover;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="flex min-h-screen">
+<div class="flex min-h-screen bg-gif">
   <!-- Sidebar -->
   <aside class="flex flex-col w-64">
-    <!-- identical sidebar -->
     <div class="flex flex-col items-center justify-center bg-[#7a9585] p-6 h-32">
       <span class="material-symbols-outlined text-black text-2xl mb-1 select-none">menu_book</span>
       <div class="font-extrabold text-black text-lg leading-none text-center select-none">
@@ -15,74 +24,73 @@
         <div>Track</div>
       </div>
     </div>
-    <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 space-y-6 text-black text-lg">
-      <a href="{% url 'book_list' %}" class="block">Books</a>
-      <a href="{% url 'category_list' %}" class="block">Categories</a>
-      <a href="{% url 'borrower_list' %}" class="block">Borrowers</a>
-      <a href="{% url 'borrow_list' %}" class="block font-bold text-green-900">List of Borrows</a>
-      <a href="{% url 'book_create' %}" class="block">Add Books</a>
-      <a href="{% url 'borrower_create' %}" class="block">Add Borrowers</a>
-      <a href="{% url 'category_create' %}" class="block">Add Categories</a>
-      <a href="{% url 'borrow_create' %}" class="block">Book Lending</a>
-      <form method="post" action="{% url 'logout' %}" class="mt-auto self-center">
+    <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 text-black text-lg">
+      <div class="space-y-4 mb-auto">
+        <a href="{% url 'book_list' %}" class="block">Books</a>
+        <a href="{% url 'category_list' %}" class="block">Categories</a>
+        <a href="{% url 'borrower_list' %}" class="block">Borrowers</a>
+        <a href="{% url 'borrow_list' %}" class="block font-bold text-green-900">List of Borrows</a>
+        <a href="{% url 'book_create' %}" class="block">Add Books</a>
+        <a href="{% url 'borrower_create' %}" class="block">Add Borrowers</a>
+        <a href="{% url 'category_create' %}" class="block">Add Categories</a>
+        <a href="{% url 'borrow_create' %}" class="block">Book Lending</a>
+      </div>
+      <form method="post" action="{% url 'logout' %}" class="pt-6 self-center">
         {% csrf_token %}
         <button class="bg-[#2a7a2e] text-white rounded-full py-2 px-12 w-max" type="submit">Logout</button>
       </form>
     </nav>
   </aside>
 
-  <!-- Content -->
-  <main class="flex-grow bg-[#f2e3d1] p-6">
+  <!-- Main Content -->
+  <main class="flex-grow bg-[#f2e3d1] bg-opacity-50 p-6">
     <h1 class="text-2xl font-bold text-green-900 text-center mb-6">Borrow Records</h1>
 
     <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
       {% for record in page_obj %}
-      <div class="bg-white p-6 rounded-lg shadow-lg space-y-2">
-        <h2 class="text-lg font-semibold text-green-900">{{ record.book.title }}</h2>
-        <p class="text-gray-700">Borrower: {{ record.borrower.name }}</p>
-        <p class="text-gray-700">Borrowed: {{ record.borrow_date|date:"M d, Y" }}</p>
-        <p class="text-gray-700">
-          Due: 
-          {% if record.return_date %}
-            {{ record.return_date|date:"M d, Y" }}
-          {% else %}
-            <span class="text-red-600 italic">Not specified</span>
-          {% endif %}
-        </p>
-        
-        <p class="text-gray-700">
-          Returned:
-          {% if record.is_returned %}
-            <span class="text-green-600 font-semibold">Yes</span>
-            {% if record.actual_return_date %}
-              on {{ record.actual_return_date|date:"M d, Y" }}
-            {% endif %}
-          {% else %}
-            <span class="text-red-600 font-semibold">No</span>
-          {% endif %}
-        </p>
-      
-        <p class="text-gray-700">
-          Fine:
-          {% with record.current_fine as fine %}
-            {% if fine > 0 %}
-              <span class="text-red-600 font-semibold">₱{{ fine }}</span>
+        <div class="bg-white p-6 rounded-lg shadow-lg space-y-2">
+          <h2 class="text-lg font-semibold text-green-900">{{ record.book.title }}</h2>
+          <p class="text-gray-700">Borrower: {{ record.borrower.name }}</p>
+          <p class="text-gray-700">Borrowed: {{ record.borrow_date|date:"M d, Y" }}</p>
+          <p class="text-gray-700">
+            Due: 
+            {% if record.return_date %}
+              {{ record.return_date|date:"M d, Y" }}
             {% else %}
-              <span class="text-green-600 font-semibold">₱0.00</span>
+              <span class="text-red-600 italic">Not specified</span>
             {% endif %}
-          {% endwith %}
-        </p>
-      
-        {% if not record.is_returned %}
-          <form method="post" action="{% url 'return_book' record.id %}">
-            {% csrf_token %}
-            <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium">Mark as Returned</button>
-          </form>
-        {% endif %}
-      </div>
-    {% empty %}
-      <p class="text-gray-700 col-span-2 text-center">No borrow records found.</p>
-    {% endfor %}
+          </p>
+          <p class="text-gray-700">
+            Returned:
+            {% if record.is_returned %}
+              <span class="text-green-600 font-semibold">Yes</span>
+              {% if record.actual_return_date %}
+                on {{ record.actual_return_date|date:"M d, Y" }}
+              {% endif %}
+            {% else %}
+              <span class="text-red-600 font-semibold">No</span>
+            {% endif %}
+          </p>
+          <p class="text-gray-700">
+            Fine:
+            {% with record.current_fine as fine %}
+              {% if fine > 0 %}
+                <span class="text-red-600 font-semibold">₱{{ fine }}</span>
+              {% else %}
+                <span class="text-green-600 font-semibold">₱0.00</span>
+              {% endif %}
+            {% endwith %}
+          </p>
+          {% if not record.is_returned %}
+            <form method="post" action="{% url 'return_book' record.id %}">
+              {% csrf_token %}
+              <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium">Mark as Returned</button>
+            </form>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p class="text-gray-700 col-span-2 text-center">No borrow records found.</p>
+      {% endfor %}
     </div>
 
     <!-- Pagination Controls -->

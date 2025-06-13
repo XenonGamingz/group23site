@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_head %}
+<link href="{% static 'css/output.css' %}" rel="stylesheet">
+<style>
+  .bg-gif {
+    background: url("{% static 'images/background.gif' %}") no-repeat center center fixed;
+    background-size: cover;
+  }
+</style>
+{% endblock %}
+
 {% block title %}Tome Track{% endblock %}
 
 {% block content %}
-<div class="flex min-h-screen">
+<div class="flex min-h-screen bg-gif">
   <!-- Sidebar -->
   <aside class="flex flex-col w-64">
     <div class="flex flex-col items-center justify-center bg-[#7a9585] p-6 h-32">
@@ -14,16 +24,18 @@
         <div>Track</div>
       </div>
     </div>
-    <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 space-y-6 text-black text-lg">
-      <a href="{% url 'book_list' %}" class="block font-bold text-green-900">Books</a>
-      <a href="{% url 'category_list' %}" class="block">Categories</a>
-      <a href="{% url 'borrower_list' %}" class="block">Borrowers</a>
-      <a href="{% url 'borrow_list' %}" class="block">List of Borrows</a>
-      <a href="{% url 'book_create' %}" class="block">Add Books</a>
-      <a href="{% url 'borrower_create' %}" class="block">Add Borrowers</a>
-      <a href="{% url 'category_create' %}" class="block">Add Categories</a>
-      <a href="{% url 'borrow_create' %}" class="block">Book Lending</a>
-      <form method="post" action="{% url 'logout' %}" class="mt-auto self-center">
+    <nav class="flex flex-col bg-[#a9c6b0] flex-grow p-6 text-black text-lg justify-between">
+      <div class="space-y-4">
+        <a href="{% url 'book_list' %}" class="block font-bold text-green-900">Books</a>
+        <a href="{% url 'category_list' %}" class="block">Categories</a>
+        <a href="{% url 'borrower_list' %}" class="block">Borrowers</a>
+        <a href="{% url 'borrow_list' %}" class="block">List of Borrows</a>
+        <a href="{% url 'book_create' %}" class="block">Add Books</a>
+        <a href="{% url 'borrower_create' %}" class="block">Add Borrowers</a>
+        <a href="{% url 'category_create' %}" class="block">Add Categories</a>
+        <a href="{% url 'borrow_create' %}" class="block">Book Lending</a>
+      </div>
+      <form method="post" action="{% url 'logout' %}" class="pt-6 self-center">
         {% csrf_token %}
         <button class="bg-[#2a7a2e] text-white rounded-full py-2 px-12 w-max" type="submit">Logout</button>
       </form>
@@ -31,7 +43,7 @@
   </aside>
 
   <!-- Main Content -->
-  <main class="flex-grow bg-[#f2e3d1] p-6">
+  <main class="flex-grow bg-[#f2e3d1] p-6 bg-opacity-50 z-0">
     <!-- Search and Filter -->
     <form method="get" action="" class="flex justify-between mb-6 max-w-4xl mx-auto">
       <!-- Search Bar -->
